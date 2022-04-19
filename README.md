@@ -47,9 +47,11 @@ Evaluating a classification model usually depends on the model's confusion matri
 
 There are multiple different metrics that are calculated using the confusion matrix. However, the one we will be using is **recall:** the percentage of true positives compared to the total number of positives, i.e.,
 
-<img src="https://render.githubusercontent.com/render/math?math=recall = \frac{TP}{P}">
+<p align="center">
+    <img src="https://render.githubusercontent.com/render/math?math=recall = \frac{TP}{P}">
+</p>
 
-where <img src="https://render.githubusercontent.com/render/math?math=TP"> is the number of true positives while <img src="https://render.githubusercontent.com/render/math?math=P"> is the total number of positives (true positives plus false negatives). We use recall as opposed to accuracy, precision, or even $F_1$ score because optimizing recall in turn optimizes the number of correct positive predictions, compared to all positive instances. Because this model is literally intended for use in life-or-death choices, it is better to overpredict positive occurrences if the number of actual positives predicted correctly is higher (in other words, it's better to overpredict the number of people vulnerable to death by COVID-19 as the cost of choosing not to hospitalize a patient who might need to be hopsitalized to survive is **much** higher than the cost of choosing to hospitalize a patient who might've survived without being hospitalized).
+where <img src="https://render.githubusercontent.com/render/math?math=TP"> is the number of true positives while <img src="https://render.githubusercontent.com/render/math?math=P"> is the total number of positives (true positives plus false negatives). We use recall as opposed to accuracy, precision, or even <img src="https://render.githubusercontent.com/render/math?math=F_1"> score because optimizing recall in turn optimizes the number of correct positive predictions, compared to all positive instances. Because this model is literally intended for use in life-or-death choices, it is better to overpredict positive occurrences if the number of actual positives predicted correctly is higher (in other words, it's better to overpredict the number of people vulnerable to death by COVID-19 as the cost of choosing not to hospitalize a patient who might need to be hopsitalized to survive is **much** higher than the cost of choosing to hospitalize a patient who might've survived without being hospitalized).
 
 ## The Team
 
