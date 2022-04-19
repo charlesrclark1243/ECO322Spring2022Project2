@@ -7,6 +7,7 @@
 3. [Data](#data)
 4. [Assumptions](#assumptions)
 5. [Modeling](#modeling)
+    - [Evaluation](#evaluation)
 6. [The Team](#the-team)
 
 ## Introduction
