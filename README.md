@@ -8,6 +8,7 @@
 4. [Assumptions](#assumptions)
 5. [Modeling](#modeling)
     - [Evaluation](#evaluation)
+    - [Our Models](#our-models)
 6. [The Team](#the-team)
 
 ## Introduction
@@ -52,6 +53,12 @@ There are multiple different metrics that are calculated using the confusion mat
 </p>
 
 where <img src="https://render.githubusercontent.com/render/math?math=TP"> is the number of true positives while <img src="https://render.githubusercontent.com/render/math?math=P"> is the total number of positives (true positives plus false negatives). We use recall as opposed to accuracy, precision, or even <img src="https://render.githubusercontent.com/render/math?math=F_1"> score because optimizing recall in turn optimizes the number of correct positive predictions, compared to all positive instances. Because this model is literally intended for use in life-or-death choices, it is better to overpredict positive occurrences if the number of actual positives predicted correctly is higher (in other words, it's better to overpredict the number of people vulnerable to death by COVID-19 as the cost of choosing not to hospitalize a patient who might need to be hopsitalized to survive is **much** higher than the cost of choosing to hospitalize a patient who might've survived without being hospitalized).
+
+### Our Models
+
+| Model Number | Model Type | Recall |
+| ------------ | ---------- | ------ |
+| 1            | Logistic Regression | 0.9538012 |
 
 ## The Team
 
