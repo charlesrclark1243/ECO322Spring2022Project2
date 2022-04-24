@@ -5,7 +5,13 @@
 # ==========================================================================================================================
 
 # install all necessary packages...
-install.packages(c("data.table", "haven", "sjlabelled", "sjmisc", "sjPlot", "plyr", "ggplot2", "caret"))
+install.packages(c("data.table", "haven", "sjlabelled", "sjmisc", "sjPlot", "plyr", "ggplot2", "caret", "scales", ""))
+
+# --------------------------------------------------------------------------------------------------------------------------
+
+# install packages necessary for SMOTE...
+install.packages(c("zoo", "xts", "quantmod", "abind", "ROCR"))
+install.packages("~/Downloads/DMwR_0.4.1.tar", repos = NULL, type = "source")
 
 # --------------------------------------------------------------------------------------------------------------------------
 
@@ -18,6 +24,7 @@ library(sjmisc)
 library(sjPlot)
 library(plyr)
 library(caret)
+library(DMwR)
 
 # ==========================================================================================================================
 
@@ -94,7 +101,7 @@ for (col in names(temp)) {
 
 # --------------------------------------------------------------------------------------------------------------------------
 
-# convert "yn" features to numeric binary variables...
+# convert "yn" features to integer binary variables...
 temp[, "died" := ifelse(test = c(temp$death_yn == "Yes"), 1, 0)]
 temp[, "underlying_conditions" := ifelse(test = c(temp$underlying_conditions_yn == "Yes"), 1, 0)]
 
@@ -117,9 +124,8 @@ typeof(temp$underlying_conditions)
 
 # --------------------------------------------------------------------------------------------------------------------------
 
-# make sure "died" and "underlying_conditions" are, in fact, numeric...
+# make sure "died" and "underlying_conditions" are of type integer...
 temp$died <- as.integer(temp$died)
-temp$died <- as.factor(temp$died)
 temp$underlying_conditions <- as.integer(temp$underlying_conditions)
 
 # --------------------------------------------------------------------------------------------------------------------------
@@ -372,8 +378,19 @@ sum(duplicated(temp))
 # therefore, we'll assume that the CDC is perfectly efficient and compitent in their record...
 # keeping and that no one case was ever counted more than one time...
 
-# finally, let's assign temp to data...
-data <- temp
+# finally, let's deep copy temp to data and make sure they are stored separately in memory...
+data <- copy(temp)
+setDT(data)
+
+check_deep <- function(og, copy) {
+  if (tracemem(copy) != tracemem(og)) {
+    print("copy is deep copy of og!")
+  } else {
+    print("copy is shallow copy of og!")
+  }
+}
+
+check_deep(og = temp, copy = data)
 
 # ==========================================================================================================================
 
@@ -381,11 +398,56 @@ data <- temp
 
 # ==========================================================================================================================
 
+# first, let's deep copy data into another temporary variable for use in our EDA...
+eda_temp <- copy(data)
+setDT(eda_temp)
 
+check_deep(og = data, copy = eda_temp)
 
+# --------------------------------------------------------------------------------------------------------------------------
 
+# now, let's convert the died feature in eda_temp to factors representing a specific COVID case's...
+# outcome, i.e., "lived" or "died"...
+eda_temp[, died := factor(ifelse(test = c(died == 1), "Died", "Lived"))]
+unique(eda_temp$died)
 
+# --------------------------------------------------------------------------------------------------------------------------
 
+# let's create a histogram showing the distribution of target variable died using a bar graph...
+ggplot(data = eda_temp, aes(x = died, fill = died)) +
+  geom_bar() +
+  scale_fill_manual(values = c("red", "green")) +
+  scale_y_continuous(name = "Count",
+                     limits = c(0, 400000, 100000),
+                     labels = scales::comma_format()) +
+  labs(title = "Distribution of COVID-19 Case Survival Outcomes",
+       x ="Survival Outcome", y = "Count",
+       "fill" = "Survival Outcome") +
+  theme_linedraw()
+
+# --------------------------------------------------------------------------------------------------------------------------
+
+# the died variable seems highly imbalanced, so let's apply SMOTE techniques to balance it out...
+# first, we'll count how many of each value are in the died column...
+
+count(eda_temp$died == "Died")
+
+# --------------------------------------------------------------------------------------------------------------------------
+
+# it looks like there are 18,436 cases where the patient died, as opposed to the...
+# 378,216 cases where the patient lived. This means we'll need to oversample the...
+# minority cases by approximately 2,052% to ensure the models we create later on see...
+# roughly equal amounts of survival and death...
+
+count(eda_temp$died)
+new_temp <- SMOTE(died ~ ., eda_temp, perc.over = 900, perc.under = 112.5)
+setDT(new_temp)
+
+# --------------------------------------------------------------------------------------------------------------------------
+
+# let's count the number of unique data values for the new_temp data.table...
+table(new_temp$died)
+table(eda_temp$died)
 
 # ==========================================================================================================================
 
