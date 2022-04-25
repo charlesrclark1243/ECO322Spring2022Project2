@@ -30,6 +30,8 @@ library(sjPlot)
 library(plyr)
 library(caret)
 library(DMwR)
+library(mapview)
+library(usmap)
 
 # ==========================================================================================================================
 
@@ -574,6 +576,45 @@ ggplot(data = eda_temp, aes(x = month, fill = month)) +
                      labels = scales::comma_format()) +
   labs(title = "Distribution of COVID-19 Cases by Month",
        x = "Month", y = "Count", fill = "Month") +
+  theme_linedraw()
+
+# --------------------------------------------------------------------------------------------------------------------------
+
+# next, we'll inspect the distribution of the age_group feature...
+# once again, we'll start by converting the integer values to text label factors...
+eda_temp[, age_group := {
+  age_group_factor_vec <- vector()
+  
+  for (index in c(1:length(eda_temp$age_group))) {
+    if (eda_temp$age_group[index] == 0) {
+      age_group_factor_vec[index] <- "0 - 17 years old"
+    } else if (eda_temp$age_group[index] == 1) {
+      age_group_factor_vec[index] <- "18 - 49 years old"
+    } else if (eda_temp$age_group[index] == 2) {
+      age_group_factor_vec[index] <- "50 - 64 years old"
+    } else {
+      age_group_factor_vec[index] <- "65+ years old"
+    }
+  }
+  
+  return(factor(x = age_group_factor_vec,
+                levels = c("0 - 17 years old", "18 - 49 years old",
+                           "50 - 64 years old", "65+ years old")))
+}]
+unique(eda_temp$age_group)
+
+# --------------------------------------------------------------------------------------------------------------------------
+
+# now, we'll create a bar graph showing the distribution of the age_group feature...
+ggplot(data = eda_temp, aes(x = age_group, fill = age_group)) +
+  geom_bar() +
+  scale_fill_manual(values = c("chartreuse", "firebrick1",
+                               "hotpink", "midnightblue")) +
+  scale_y_continuous(name = "Count",
+                     limits = c(0, 200000, 50000),
+                     labels = scales::comma_format()) +
+  labs(title = "Distribution of COVID-19 Cases by Age Group",
+       x = "Age Group", y = "Count", fill = "Age Group") +
   theme_linedraw()
 
 # ==========================================================================================================================
