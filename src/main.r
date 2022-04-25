@@ -4,6 +4,11 @@
 
 # ==========================================================================================================================
 
+# remove all existing environment variables...
+rm(list = ls())
+
+# --------------------------------------------------------------------------------------------------------------------------
+
 # install all necessary packages...
 install.packages(c("data.table", "haven", "sjlabelled", "sjmisc", "sjPlot", "plyr", "ggplot2", "caret", "scales", ""))
 
@@ -413,7 +418,7 @@ unique(eda_temp$died)
 
 # --------------------------------------------------------------------------------------------------------------------------
 
-# let's create a histogram showing the distribution of target variable died using a bar graph...
+# let's create a bar graph showing the distribution of target variable died using a bar graph...
 ggplot(data = eda_temp, aes(x = died, fill = died)) +
   geom_bar() +
   scale_fill_manual(values = c("red", "green")) +
@@ -427,27 +432,18 @@ ggplot(data = eda_temp, aes(x = died, fill = died)) +
 
 # --------------------------------------------------------------------------------------------------------------------------
 
-# the died variable seems highly imbalanced, so let's apply SMOTE techniques to balance it out...
-# first, we'll count how many of each value are in the died column...
+# the died variable seems highly imbalanced, so we may need to apply SMOTE techniques...
+# to balance the data later on when we start creating models...
 
-count(eda_temp$died == "Died")
-
-# --------------------------------------------------------------------------------------------------------------------------
-
-# it looks like there are 18,436 cases where the patient died, as opposed to the...
-# 378,216 cases where the patient lived. This means we'll need to oversample the...
-# minority cases by approximately 2,052% to ensure the models we create later on see...
-# roughly equal amounts of survival and death...
-
-count(eda_temp$died)
-new_temp <- SMOTE(died ~ ., eda_temp, perc.over = 900, perc.under = 112.5)
-setDT(new_temp)
+# next, we will inspect the distribution of the symptomatic column...
+# before we create any plots, we'll need to convert the symptomatic attribute values...
+# to factor values with text labels...
+eda_temp[, symptomatic := factor(ifelse(test = c(symptomatic == 1), "Symptomatic", "Asymptomatic"))]
+unique(eda_temp$symptomatic)
 
 # --------------------------------------------------------------------------------------------------------------------------
 
-# let's count the number of unique data values for the new_temp data.table...
-table(new_temp$died)
-table(eda_temp$died)
+
 
 # ==========================================================================================================================
 
