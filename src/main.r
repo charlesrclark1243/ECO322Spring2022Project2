@@ -338,11 +338,6 @@ length(unique(temp$res_state))
 
 # --------------------------------------------------------------------------------------------------------------------------
 
-# drop res_state since fips code uniquely identifies each possible value...
-temp[, res_state := NULL]
-
-# --------------------------------------------------------------------------------------------------------------------------
-
 # extract month from case_month...
 temp[, "month" := {
   month_vec <- vector()
@@ -426,7 +421,7 @@ ggplot(data = eda_temp, aes(x = died, fill = died)) +
                      limits = c(0, 400000, 100000),
                      labels = scales::comma_format()) +
   labs(title = "Distribution of COVID-19 Case Survival Outcomes",
-       x ="Survival Outcome", y = "Count",
+       x = "Survival Outcome", y = "Count",
        "fill" = "Survival Outcome") +
   theme_linedraw()
 
@@ -443,7 +438,143 @@ unique(eda_temp$symptomatic)
 
 # --------------------------------------------------------------------------------------------------------------------------
 
+# now, let's create a bar graph showing the distribution of the symptomatic attribute...
+ggplot(data = eda_temp, aes(x = symptomatic, fill = symptomatic)) +
+  geom_bar() +
+  scale_fill_manual(values = c("blue", "yellow")) +
+  scale_y_continuous(name = "Count",
+                     limits = c(0, 400000, 100000),
+                     labels = scales::comma_format()) +
+  labs(title = "Distribution of COVID-19 Case Symptom Status",
+       x = "Symptom Status", y = "Count", fill = "Symptom Status") +
+  theme_linedraw()
 
+# --------------------------------------------------------------------------------------------------------------------------
+
+# at this point, we'll inspect the distribution of the is_male column...
+# to start, we'll convert is_male from integer indicator values to...
+# factors with text labels...
+eda_temp[, is_male := factor(ifelse(test = c(is_male == 1), "Male", "Female"))]
+unique(eda_temp$is_male)
+
+# --------------------------------------------------------------------------------------------------------------------------
+
+# now, we'll create a bar graph showing the distribution of the is_male attribute...
+ggplot(data = eda_temp, aes(x = is_male, fill = is_male)) +
+  geom_bar() +
+  scale_fill_manual(values = c("purple", "orange")) +
+  scale_y_continuous(name = "Count",
+                     limits = c(0, 250000, 50000),
+                     labels = scales::comma_format()) +
+  labs(title = "Distribution of COVID-19 Cases by Sex",
+       x = "Sex", y = "Count", fill = "Sex") +
+  theme_linedraw()
+
+# --------------------------------------------------------------------------------------------------------------------------
+
+# next, we'll inspect the distribution of the is_hispanic_latino feature...
+# once again, we'll convert the binary indicators to text label factors...
+eda_temp[, is_hispanic_latino := factor(ifelse(test = c(is_hispanic_latino == 1), "Hispanic/Latino", "Non-Hispanic/Latino"))]
+unique(eda_temp$is_hispanic_latino)
+
+# --------------------------------------------------------------------------------------------------------------------------
+
+# now, create bar graph showing distribution of is_hispanic_latino attribute...
+ggplot(data = eda_temp, aes(x = is_hispanic_latino, fill = is_hispanic_latino)) +
+  geom_bar() +
+  scale_fill_manual(values = c("tomato2", "springgreen")) +
+  scale_y_continuous(name = "Count",
+                     limits = c(0, 400000, 100000),
+                     labels = scales::comma_format()) +
+  labs(title = "Distribution of COVID-19 Cases by Ethnicity",
+       x = "Ethnicity", y = "Count", fill = "Ethnicity") +
+  theme_linedraw()
+
+# --------------------------------------------------------------------------------------------------------------------------
+
+# at this point, we'll inspect the distribution of the underlying_conditions attribute...
+# once again, we'll convert the binary indicator values to text label factors...
+eda_temp[, underlying_conditions := factor(ifelse(test = c(underlying_conditions == 1), "Yes", "No"))]
+unique(eda_temp$underlying_conditions)
+
+# --------------------------------------------------------------------------------------------------------------------------
+
+# now, we'll create a bar graph showing the distribution of the underlying_conditions column...
+ggplot(data = eda_temp, aes(x = underlying_conditions, fill = underlying_conditions)) +
+  geom_bar() +
+  scale_fill_manual(values = c("steelblue1", "lightcoral")) +
+  scale_y_continuous(name = "Count",
+                     limits = c(0, 400000, 100000),
+                     labels = scales::comma_format()) +
+  labs(title = "Distribution of COVID-19 Case Patients with Underlying Conditions",
+       x = "Underlying Conditions?", y = "Count", fill = "Underlying Conditions?") +
+  theme_linedraw()
+
+# --------------------------------------------------------------------------------------------------------------------------
+
+# next, we'll inspect the distribution of the race attribute...
+# once again, we'll need to convert the integer indicators to text label factors...
+eda_temp[, race := {
+  race_factor_vec <- vector()
+  
+  for (index in c(1:length(eda_temp$race))) {
+    if (eda_temp$race[index] == 0) {
+      race_factor_vec[index] = "White"
+    } else if (eda_temp$race[index] == 1) {
+      race_factor_vec[index] = "Black"
+    } else if (eda_temp$race[index] == 2) {
+      race_factor_vec[index] = "Asian"
+    } else if (eda_temp$race[index] == 3) {
+      race_factor_vec[index] = "Multiple/Other"
+    } else if (eda_temp$race[index] == 4) {
+      race_factor_vec[index] = "Native Hawaiian/Other Pacific Islander"
+    } else {
+      race_factor_vec[index] = "American Indian/Alaska Native"
+    }
+  }
+  
+  return (as.factor(race_factor_vec))
+}]
+unique(eda_temp$race)
+
+# --------------------------------------------------------------------------------------------------------------------------
+
+# now, let's create a bar graph showing the distribution of the race attribute...
+ggplot(data = eda_temp, aes(x = race, fill = race)) +
+  geom_bar() +
+  scale_fill_manual(values = c("cyan2", "orchid1", "lightslateblue",
+                               "darkseagreen", "aquamarine", "lightgoldenrod")) +
+  scale_y_continuous(name = "Count",
+                     limits = c(0, 400000, 100000),
+                     labels = scales::comma_format()) +
+  labs(title = "Distribution of COVID-19 Cases by Race",
+       x = "Race", y = "Count", fill = "Race") +
+  theme_linedraw()
+
+# --------------------------------------------------------------------------------------------------------------------------
+
+# at this point, we'll inspect the distribution of the month attribute...
+# once again, we'll need to convert the integer indicator values to text label factors...
+eda_temp$month <- temp$month
+eda_temp[, month := as.character(month.abb[month])]
+month_vec <- as.vector(eda_temp$month)
+eda_temp[, month := factor(x = month_vec,
+                           levels = c("Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                                      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"))]
+unique(eda_temp$month)
+
+# --------------------------------------------------------------------------------------------------------------------------
+
+# now, we'll create a bar graph showing the distribution of the month column...
+ggplot(data = eda_temp, aes(x = month, fill = month)) +
+  geom_bar() +
+  scale_fill_discrete() +
+  scale_y_continuous(name = "Count",
+                     limits = c(0, 60000, 10000),
+                     labels = scales::comma_format()) +
+  labs(title = "Distribution of COVID-19 Cases by Month",
+       x = "Month", y = "Count", fill = "Month") +
+  theme_linedraw()
 
 # ==========================================================================================================================
 
