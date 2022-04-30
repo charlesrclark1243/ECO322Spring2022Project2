@@ -665,6 +665,9 @@ train_indices <- sample(seq_len(nrow(temp)), size = floor(0.8 * nrow(temp)))
 train <- temp[train_indices, ]
 test <- temp[-train_indices, ]
 
+train[, died := as.factor(died)]
+test[, died := as.factor(died)]
+
 # --------------------------------------------------------------------------------------------------------------------------
 
 # create the first logistic regression model, fit using train data, and get summary...
@@ -676,6 +679,57 @@ summary(model_one)
 # --------------------------------------------------------------------------------------------------------------------------
 
 # make predictions using test data...
-test$pred <- predict(model_one, newdata = test)
+test$pred_one <- predict(model_one, newdata = test)
 sensitivity(test$died, test$pred)
+
+# --------------------------------------------------------------------------------------------------------------------------
+
+# create second model including race...
+model_two <- train(died ~ (age_group + underlying_conditions + is_male + race), data = train,
+                   method = "glm", family = "binomial")
+
+summary(model_two)
+
+# --------------------------------------------------------------------------------------------------------------------------
+
+# make predictions using test data...
+test$pred_two <- predict(model_two, newdata = test)
+sensitivity(test$died, test$pred_two)
+
+# adding race made the recall get worse, so let's take it out of our next model...
+
+# --------------------------------------------------------------------------------------------------------------------------
+
+# create third model excluding race and including symptomatic...
+model_three <- train(died ~ (age_group + underlying_conditions + is_male + symptomatic),
+                     data = train, method = "glm", family = "binomial")
+
+summary(model_three)
+
+# --------------------------------------------------------------------------------------------------------------------------
+
+# make predictions using test data...
+test$pred_three <- predict(model_three, newdata = test)
+sensitivity(test$died, test$pred_three)
+
+# this time, symptomatic didn't reduce recall, but it didn't increase it either...
+# let's do one  last model to see if ethnicity plays a role...
+
+# --------------------------------------------------------------------------------------------------------------------------
+
+# create fourth model excluding race, symptomatic and including is_hispanic_latino...
+model_four <- train(died ~ (age_group + underlying_conditions + is_male + is_hispanic_latino),
+                    data = train, method = "glm", family = "binomial")
+
+summary(model_four)
+
+# --------------------------------------------------------------------------------------------------------------------------
+
+# make predictions using test data...
+test$pred_four <- predict(model_four, newdata = test)
+sensitivity(test$died, test$pred_four)
+
+# once again, is_hispanic_latino didn't add anything to our initial model's performance...
+# therefore, we accept model_one as the optimal model for regulating hospital admitance, ...
+# as following it's predictions will result in good outcomes approximately 95.4% of the time...
 
