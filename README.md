@@ -56,9 +56,12 @@ where <img src="https://render.githubusercontent.com/render/math?math=TP"> is th
 
 ### Our Models
 
-| Model Number | Model Type | Recall |
-| ------------ | ---------- | ------ |
-| 1            | Logistic Regression | 0.9538012 |
+| Model Number | Explanatory Variables Used | Recall |
+| ------------ | -------------------------- | ------ |
+| 1            | ```age_group```, ```underlying_conditions```, ```is_male``` | 0.9538012 |
+| 2            | ```age_group```, ```underlying_conditions```, ```is_male```, ```race``` | 0.9537924 |
+| 3            | ```age_group```, ```underlying_conditions```, ```is_male```, ```symptomatic``` | 0.9538012 |
+| 4            | ```age_group```, ```underlying_conditions```, ```is_male```, ```is_hispanic_latino``` | 0.9538012 |
 
 ## The Team
 
