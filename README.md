@@ -9,6 +9,10 @@
 5. [Modeling](#modeling)
     - [Evaluation](#evaluation)
     - [Our Models](#our-models)
+        - [Model One](#model-one)
+        - [Model Two](#model-two)
+        - [Model Three](#model-three)
+        - [Model Four](#model-four)
 6. [The Team](#the-team)
 
 ## Introduction
@@ -62,6 +66,101 @@ where <img src="https://render.githubusercontent.com/render/math?math=TP"> is th
 | 2            | ```age_group```, ```underlying_conditions```, ```is_male```, ```race``` | 0.9537924 |
 | 3            | ```age_group```, ```underlying_conditions```, ```is_male```, ```symptomatic``` | 0.9538012 |
 | 4            | ```age_group```, ```underlying_conditions```, ```is_male```, ```is_hispanic_latino``` | 0.9538012 |
+
+#### Model One
+
+**Deviance Residuals**
+| Min | 1Q | Median | 3Q | Max |
+| --- | -- | ------ | -- | --- |
+| -0.6258 | -0.2169 | -0.0723 | -0.0568 | 3.8789 |
+
+**Coefficients**
+| Coefficient Term | Estimate | Standard Error | z-Value | p-Value | Minimum Significance Level |
+| ---------------- | -------- | -------------- | ------- | ------- | -------------------------- |
+| (Intercept)      | -11.93594 | 0.38275       | -31.185 | <2e-16 | <0.001 |
+| ```age_group``` | 2.20673 | 0.02172 | 101.588 | <2e-16 | <0.001 |
+| ```underlying_conditions``` | 3.30197 | 0.37880 | 8.717 | <2e-16 | <0.001 |
+| ```is_male``` | 0.48268 | 0.01785 | 27.040 | <2e-16 | <0.001 |
+
+**Other Information**
+| Measure | Value | Degrees of Freedom |
+| ------- | ----- | ------------------ |
+| Null Deviance | 119,456 | 317,320 |
+| Residual Deviance | 91,551 | 317,317 |
+| AIC | 91,559 | N/A |
+| Num. Fisher Scoring Iterations | 10 | N/A |
+
+#### Model Two
+
+**Deviance Residuals**
+| Min | 1Q | Median | 3Q | Max |
+| --- | -- | ------ | -- | --- |
+| -1.4849 | -0.2553 | -0.0825 | -0.0513 | 3.9051 |
+
+**Coefficients**
+| Coefficient Term | Estimate | Standard Error | z-Value | p-Value | Minimum Significance Level |
+| ---------------- | -------- | -------------- | ------- | ------- | -------------------------- |
+| (Intercept)      | -12.17310 | 0.38310       | -31.775 | <2e-16 | <0.001 |
+| ```age_group``` | 2.27440 | 0.02211 | 102.865 | <2e-16 | <0.001 |
+| ```underlying_conditions``` | 3.26546 | 0.37886 | 8.619 | <2e-16 | <0.001 |
+| ```is_male``` | 0.49294 | 0.01791 | 27.520 | <2e-16 | <0.001 |
+| ```race``` | 0.45808 | 0.01611 | 28.433 | <2e-16 | <0.001 |
+
+**Other Information**
+| Measure | Value | Degrees of Freedom |
+| ------- | ----- | ------------------ |
+| Null Deviance | 119,456 | 317,320 |
+| Residual Deviance | 90,860 | 317,316 |
+| AIC | 90,870 | N/A |
+| Num. Fisher Scoring Iterations | 10 | N/A |
+
+#### Model Three
+
+**Deviance Residuals**
+| Min | 1Q | Median | 3Q | Max |
+| --- | -- | ------ | -- | --- |
+| -0.6312 | -0.2182 | -0.0725 | -0.0571 | 3.8750 |
+
+**Coefficients**
+| Coefficient Term | Estimate | Standard Error | z-Value | p-Value | Minimum Significance Level |
+| ---------------- | -------- | -------------- | ------- | ------- | -------------------------- |
+| (Intercept)      | -12.42953 | 0.38595       | -32.20 | <2e-16 | <0.001 |
+| ```age_group``` | 2.21354 | 0.02174 | 101.80 | <2e-16 | <0.001 |
+| ```underlying_conditions``` | 3.30319 | 0.37880 | 8.72 | <2e-16 | <0.001 |
+| ```is_male``` | 0.47842 | 0.01786 | 26.79 | <2e-16 | <0.001 |
+| ```symptomatic``` | 0.49529 | 0.04948 | 10.01 | <2e-16 | <0.001 |
+
+**Other Information**
+| Measure | Value | Degrees of Freedom |
+| ------- | ----- | ------------------ |
+| Null Deviance | 119,456 | 317,320 |
+| Residual Deviance | 91,437 | 317,316 |
+| AIC | 91,447 | N/A |
+| Num. Fisher Scoring Iterations | 10 | N/A |
+
+#### Model Four
+
+**Deviance Residuals**
+| Min | 1Q | Median | 3Q | Max |
+| --- | -- | ------ | -- | --- |
+| -0.8705 | -0.2421 | -0.0788 | -0.0535 | 3.8994 |
+
+**Coefficients**
+| Coefficient Term | Estimate | Standard Error | z-Value | p-Value | Minimum Significance Level |
+| ---------------- | -------- | -------------- | ------- | ------- | -------------------------- |
+| (Intercept)      | -12.11753 | 0.38303       | -31.636 | <2e-16 | <0.001 |
+| ```age_group``` | 2.25770 | 0.02210 | 102.174 | <2e-16 | <0.001 |
+| ```underlying_conditions``` | 3.31048 | 0.37882 | 8.739 | <2e-16 | <0.001 |
+| ```is_male``` | 0.48271 | 0.01787 | 27.011 | <2e-16 | <0.001 |
+| ```is_hispanic_latino``` | 0.77614 | 0.04333 | 17.914 | <2e-16 | <0.001 |
+
+**Other Information**
+| Measure | Value | Degrees of Freedom |
+| ------- | ----- | ------------------ |
+| Null Deviance | 119,456 | 317,320 |
+| Residual Deviance | 91,272 | 317,316 |
+| AIC | 91,282 | N/A |
+| Num. Fisher Scoring Iterations | 10 | N/A |
 
 ## The Team
 
