@@ -617,6 +617,87 @@ ggplot(data = eda_temp, aes(x = age_group, fill = age_group)) +
        x = "Age Group", y = "Count", fill = "Age Group") +
   theme_linedraw()
 
+# --------------------------------------------------------------------------------------------------------------------------
+
+# now, we'll want to create multivariate visualizations for each relevant explanatory variable...
+# here, we consider any explanatory variables used in one of the four models below as relevant...
+
+# let's start with the age_group variable...
+ggplot(data = eda_temp, aes(x = age_group, fill = died)) +
+  geom_bar(position = "dodge") +
+  scale_fill_manual(values = c("red", "green")) +
+  scale_y_continuous(name = "Count",
+                     limits = c(0, 200000, 50000),
+                     labels = scales::comma_format()) +
+  labs(title = "Distribution of COVID-19 Survival Outcomes, Grouped by Age Group",
+       x = "Age Group", y = "Count", fill = "Survival Outcome") +
+  theme_linedraw()
+
+# --------------------------------------------------------------------------------------------------------------------------
+
+# next, we'll do the multivariate plot for underlying_conditions...
+ggplot(data = eda_temp, aes(x = underlying_conditions, fill = died)) +
+  geom_bar(position = "dodge") +
+  scale_fill_manual(values = c("red", "green")) +
+  scale_y_continuous(name = "Count",
+                     limits = c(0, 400000, 100000),
+                     labels = scales::comma_format()) +
+  labs(title = "Distribution of COVID-19 Survival Outcomes, Grouped by Presence of Underlying Conditions",
+       x = "Underlying Conditions?", y = "Count", fill = "Survival Outcome") +
+  theme_linedraw()
+
+# --------------------------------------------------------------------------------------------------------------------------
+
+# now, we'll do the multivariate plot for is_male...
+ggplot(data = eda_temp, aes(x = is_male, fill = died)) +
+  geom_bar(position = "dodge") +
+  scale_fill_manual(values = c("red", "green")) +
+  scale_y_continuous(name = "Count",
+                     limits = c(0, 250000, 50000),
+                     labels = scales::comma_format()) +
+  labs(title = "Distribution of COVID-19 Survival Outcomes, Grouped by Sex",
+       x = "Sex", y = "Count", fill = "Survival Outcome") +
+  theme_linedraw()
+
+# --------------------------------------------------------------------------------------------------------------------------
+
+# next, we'll do the multivariate plot for race...
+ggplot(data = eda_temp, aes(x = race, fill = died)) +
+  geom_bar(position = "dodge") +
+  scale_fill_manual(values = c("red", "green")) +
+  scale_y_continuous(name = "Count",
+                     limits = c(0, 350000, 50000),
+                     labels = scales::comma_format()) +
+  labs(title = "Distribution of COVID-19 Survival Outcomes, Grouped by Race",
+       x = "Race", y = "Count", fill = "Survival Outcome") +
+  theme_linedraw()
+
+# --------------------------------------------------------------------------------------------------------------------------
+
+# now, we'll do the multivariate plot for symptomatic...
+ggplot(data = eda_temp, aes(x = symptomatic, fill = died)) +
+  geom_bar(position = "dodge") +
+  scale_fill_manual(values = c("red", "green")) +
+  scale_y_continuous(name = "Count",
+                     limits = c(0, 400000, 100000),
+                     labels = scales::comma_format()) +
+  labs(title = "Distribution of COVID-19 Survival Outcome, Grouped by Symptom Status",
+       x = "Symptom Status", y = "Count", fill = "Survival Outcome") +
+  theme_linedraw()
+
+# --------------------------------------------------------------------------------------------------------------------------
+
+# finally, we'll do the multivariate plot for is_hispanic_latino...
+ggplot(data = eda_temp, aes(x = is_hispanic_latino, fill = died)) +
+  geom_bar(position = "dodge") +
+  scale_fill_manual(values = c("red", "green")) +
+  scale_y_continuous(name = "Count",
+                     limits = c(0, 400000, 100000),
+                     labels = scales::comma_format()) +
+  labs(title = "Distribution of COVID-19 Survival Outcomes, Grouped by Ethnicity",
+       x = "Ethnicity", y = "Count", fill = "Survival Outcome") +
+  theme_linedraw()
+
 # ==========================================================================================================================
 
 # Modeling (Jesse & Charlie)
