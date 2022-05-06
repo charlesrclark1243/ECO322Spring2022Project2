@@ -10,28 +10,15 @@ rm(list = ls())
 # --------------------------------------------------------------------------------------------------------------------------
 
 # install all necessary packages...
-install.packages(c("data.table", "haven", "sjlabelled", "sjmisc", "sjPlot", "plyr", "ggplot2", "caret", "scales", ""))
-
-# --------------------------------------------------------------------------------------------------------------------------
-
-# install packages necessary for SMOTE...
-install.packages(c("zoo", "xts", "quantmod", "abind", "ROCR"))
-install.packages("~/Downloads/DMwR_0.4.1.tar", repos = NULL, type = "source")
+install.packages(c("data.table", "ggplot2", "caret", "plyr"))
 
 # --------------------------------------------------------------------------------------------------------------------------
 
 # import all necessary packages...
 library(data.table)
 library(ggplot2)
-library(haven)
-library(sjlabelled)
-library(sjmisc)
-library(sjPlot)
-library(plyr)
 library(caret)
-library(DMwR)
-library(mapview)
-library(usmap)
+library(plyr)
 
 # ==========================================================================================================================
 
@@ -746,8 +733,19 @@ train_indices <- sample(seq_len(nrow(temp)), size = floor(0.8 * nrow(temp)))
 train <- temp[train_indices, ]
 test <- temp[-train_indices, ]
 
-train[, died := as.factor(died)]
-test[, died := as.factor(died)]
+train[, died := {
+  train_factor <- factor(train$died)
+  
+  return (factor(train_factor, levels = c("1", "0")))
+}]
+test[, died := {
+  test_factor <- factor(test$died)
+  
+  return (factor(test_factor, levels = c("1", "0")))
+}]
+
+unique(train$died)
+unique(test$died)
 
 # --------------------------------------------------------------------------------------------------------------------------
 
@@ -761,7 +759,12 @@ summary(model_one)
 
 # make predictions using test data...
 test$pred_one <- predict(model_one, newdata = test)
-sensitivity(test$died, test$pred)
+sensitivity(data = test$pred, reference = test$died)
+
+# --------------------------------------------------------------------------------------------------------------------------
+
+# generate confusion matrix for model one...
+confusionMatrix(data = test$pred, reference = test$died)
 
 # --------------------------------------------------------------------------------------------------------------------------
 
@@ -775,9 +778,19 @@ summary(model_two)
 
 # make predictions using test data...
 test$pred_two <- predict(model_two, newdata = test)
-sensitivity(test$died, test$pred_two)
+sensitivity(reference = test$died, data = test$pred_two)
 
-# adding race made the recall get worse, so let's take it out of our next model...
+# adding race didn't change recall, so let's take it out of our next model...
+
+# --------------------------------------------------------------------------------------------------------------------------
+
+# generate confusion matrix for model one...
+confusionMatrix(reference = test$died, data = test$pred_two)
+
+# our confusion matrix indicates that not only did recall with respect to predicting death not improve,...
+# but our recall with respect to predicting survival got worse as well...
+# in other words, instead of guessing that everyone survived like in model one,...
+# this model predicted some people who survived would die while predicting all those who actually did die would survive...
 
 # --------------------------------------------------------------------------------------------------------------------------
 
@@ -791,10 +804,15 @@ summary(model_three)
 
 # make predictions using test data...
 test$pred_three <- predict(model_three, newdata = test)
-sensitivity(test$died, test$pred_three)
+sensitivity(reference = test$died, data = test$pred_three)
 
 # this time, symptomatic didn't reduce recall, but it didn't increase it either...
 # let's do one  last model to see if ethnicity plays a role...
+
+# --------------------------------------------------------------------------------------------------------------------------
+
+# generate confusion matrix for model one...
+confusionMatrix(reference = test$died, data = test$pred_three)
 
 # --------------------------------------------------------------------------------------------------------------------------
 
@@ -808,9 +826,24 @@ summary(model_four)
 
 # make predictions using test data...
 test$pred_four <- predict(model_four, newdata = test)
-sensitivity(test$died, test$pred_four)
+sensitivity(data = test$pred_four, reference = test$died)
+
+# --------------------------------------------------------------------------------------------------------------------------
+
+# generate confusion matrix for model one...
+confusionMatrix(data = test$pred_four, reference = test$died)
 
 # once again, is_hispanic_latino didn't add anything to our initial model's performance...
-# therefore, we accept model_one as the optimal model for regulating hospital admitance, ...
-# as following it's predictions will result in good outcomes approximately 95.4% of the time...
+
+# --------------------------------------------------------------------------------------------------------------------------
+
+# unfortunately, our models didn't do so well (despite our keeping face for the presentation we gave in class)...
+# nonetheless, we still accept model one over all the other models, as it is the simplest model (Occam's Razor)...
+# we don't need to consider recall measures in this decision, since they all performed equally bad...
+
+# moving forward, we might try not to limit so much of our data by erasing as many entries as we did...
+# perhaps this is one factor that contributed to the horrendous performance of our models (the real performances,...
+# not the original and incorrect ones we presented in our slides)...
+
+
 
